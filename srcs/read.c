@@ -31,7 +31,7 @@ void    read_farm(farm *farm)
 	char	*line;
 	map		*tmp;
 
-	farm->map = NULL;
+	farm->map = (map*)malloc(sizeof(map));
 	tmp = farm->map;
 	farm->count_of_links = 0;
 	farm->count_of_rooms = 0;
@@ -41,9 +41,8 @@ void    read_farm(farm *farm)
 			farm->count_of_rooms++;
 		if (str_count_chr(line, '-') == 1)
 			farm->count_of_links++;
-		tmp = (map*)malloc(sizeof(map));
 		tmp->line = ft_strdup(line);
-		tmp->next = NULL;
+		tmp->next = (map*)malloc(sizeof(map));
 		tmp = tmp->next;
 	}
 }

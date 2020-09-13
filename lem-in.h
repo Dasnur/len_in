@@ -27,6 +27,8 @@ typedef struct		t_room
 	int				x;
 	int				y;
 	size_t			count_linked_with;
+	int				seen_flag;
+	struct t_room	**linked;
 }					room;
 
 typedef struct	s_map
@@ -41,10 +43,14 @@ typedef struct		s_farm
 	t_link			**links;
 	size_t			count_of_rooms;
 	size_t			count_of_links;
+	size_t			count_of_ants;
+	room			***buffer_of_pathes;
 	map				*map;
 }					farm;
 
 void    fill_rooms(farm *farm);
 void    read_farm(farm *farm);
+void	links_room(farm *farm);
+room	***find_pathes(farm *farm, room ***buffer_of_pathes);
 
 #endif
