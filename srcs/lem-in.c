@@ -15,19 +15,30 @@
 int		main()
 {
     farm    farm;
-    room	***buffer_of_pathes;
+    path	*pathes;
 
     read_farm(&farm);
     fill_rooms(&farm);
+    // int i = 0;
+    // while (i < farm.count_of_rooms)
+    // {
+    //     printf("fdsf\n");
+    //     printf(farm.rooms[i]->name);
+    //     i++;
+    // }
 	links_room(&farm);
-    // printf(farm.rooms[3]->linked[0]->name);
-	buffer_of_pathes = find_pathes(&farm, buffer_of_pathes);
-    printf(buffer_of_pathes[0][0]->name);
-    printf(buffer_of_pathes[0][1]->name);
-    printf(buffer_of_pathes[0][2]->name);
-    printf(buffer_of_pathes[0][3]->name);
-    // printf(buffer_of_pathes[1][1]->name);
-    // printf(buffer_of_pathes[1][2]->name);
-    // printf(buffer_of_pathes[1][3]->name);
+    // printf(farm.rooms[5]->linked[1]->name);
+	pathes = find_pathes(&farm, pathes);
+    while (pathes != NULL)
+    {
+        int i = 0;
+        while (pathes->rooms[i] != NULL)
+        {
+            printf(pathes->rooms[i]->name);
+            i++;
+        }
+        pathes = pathes->next;
+        printf("\n");
+    }
 	return (0);
 }

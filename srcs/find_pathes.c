@@ -37,22 +37,107 @@ void	calloc_buffer_2lvl(room **buffer, size_t size)
 	}
 }
 
-void	copy_buffer_2lvl_with_new_el(room ***buffer_of_pathes, size_t end_of_buffer_2lvl, size_t i, room *r)
+path	*copy_buffer_2lvl_with_new_el(path *p, path *aim, room *r, size_t count)
 {
-	size_t	l;
+	path	*tmp;
+	size_t	i;
 
-	l = 0;
-	while (buffer_of_pathes[i][l + 1] != NULL)
+	i = 0;
+	int k1 = 0;
+	tmp = p;
+	// printf("F\n");
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	while (aim->rooms[i + 1] != NULL)
 	{
-		buffer_of_pathes[end_of_buffer_2lvl][l] = buffer_of_pathes[i][l];
-		l++;
+		tmp->rooms[i] = aim->rooms[i];
+		// printf(tmp->rooms[i]->name);
+		// printf(aim->rooms[i]->name);
+		i++;
 	}
-	printf("F\n");
-	buffer_of_pathes[end_of_buffer_2lvl][l] = r;
-	r->seen_flag = 1;
+	tmp->rooms[i] = r;
+	while (k1 < count)
+	{
+		tmp->linked_indexes[k1] = aim->linked_indexes[k1];
+		k1++;
+	}
+	tmp->linked_indexes[aim->rooms[i]->index] = 0;
+	tmp->linked_indexes[tmp->rooms[i]->index] = 1;
+	// printf("F\n");
+	// printf("%s %d ", tmp->rooms[i]->name, k1);
+	// r->seen_flag = 1;
+	return p;
 }
 
-room	***find_pathes(farm *farm, room ***buffer_of_pathes)
+void	calloc_buffer_ints(int *mas, size_t count)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < count)
+	{
+		mas[i] = 0;
+		i++;
+	}
+}
+
+path	*add_spath_to_pathes(path *pathes, farm *farm)
+{
+	path	*tmp;
+
+	tmp = pathes;
+	if (pathes == NULL)
+	{
+		pathes = (path *)malloc(sizeof(path));
+		pathes->rooms = (room **)malloc(sizeof(room *) * farm->count_of_rooms);
+		pathes->linked_indexes = (int *)malloc(sizeof(int) * farm->count_of_rooms);
+		calloc_buffer_ints(pathes->linked_indexes, farm->count_of_rooms);
+		calloc_buffer_2lvl(pathes->rooms, farm->count_of_rooms);
+		pathes->next = NULL;
+	}
+	else
+	{
+		while (tmp->next != NULL)
+			tmp = tmp->next;
+		tmp->next = (path*)malloc(sizeof(path));
+		tmp->next->rooms = (room **)malloc(sizeof(room *) * farm->count_of_rooms);
+		tmp->next->linked_indexes = (int *)malloc(sizeof(int) * farm->count_of_rooms);
+		calloc_buffer_ints(tmp->next->linked_indexes, farm->count_of_rooms);
+		calloc_buffer_2lvl(tmp->next->rooms, farm->count_of_rooms);
+		tmp->next->next = NULL;
+		// printf("gavno\n");
+	}
+	return pathes;
+}
+
+room	**get_name_node(path *pathes)
+{
+	path	*tmp;
+
+	tmp = pathes;
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	return tmp->rooms;
+}
+
+int		verificate_inserted_room(size_t index, path *begin, path *th)
+{
+	path	*tmp;
+
+	tmp = begin;
+	while (tmp)
+	{
+		if (tmp == th)
+		{
+			if (th->linked_indexes[index] == 0)
+				return (1);
+			return (0);
+		}
+		tmp = tmp->next;
+	}
+}
+
+path	*find_pathes(farm *farm, path *pathes)
 {
 	int		flag_of_the_end_of_cycle;
 	size_t	i;
@@ -60,6 +145,8 @@ room	***find_pathes(farm *farm, room ***buffer_of_pathes)
 	size_t	index_links;
 	size_t	end_buffer_2lvl;
 	size_t	ii;
+	path	*tmp;
+	room 	**tmp_my;
 
 	ii = 0;
 	end_buffer_2lvl = 1;
@@ -67,56 +154,52 @@ room	***find_pathes(farm *farm, room ***buffer_of_pathes)
 	index_links = 0;
 	i = 0;
 	flag_of_the_end_of_cycle = 1;
-	buffer_of_pathes = (room***)malloc(sizeof(room**) * farm->count_of_rooms + 1);
-	calloc_buffer_1lvl(buffer_of_pathes, farm->count_of_rooms + 1);
-	buffer_of_pathes[0] = (room**)malloc(sizeof(room*) * farm->count_of_rooms + 1);
-	calloc_buffer_2lvl(buffer_of_pathes[0], farm->count_of_rooms + 1);
-	buffer_of_pathes[0][0] = farm->rooms[0];
+	pathes = NULL;
+	pathes = add_spath_to_pathes(pathes, farm);
 	// printf("%s\n", buffer_of_pathes[0][0]->linked[1]->name);
-	farm->rooms[0]->seen_flag = 1;
+	pathes->rooms[0] = farm->rooms[0];
+	pathes->linked_indexes[pathes->rooms[0]->index] = 1;
+	tmp = pathes;
 	while (flag_of_the_end_of_cycle)
 	{
-		while (i < end_buffer_2lvl)
+		while (tmp)
 		{
 			printf("OH\n");
-			while (buffer_of_pathes[i][k] != NULL)
+			while (tmp->rooms[k] != NULL)
 			{
-				// printf("fd\n");
-				printf(buffer_of_pathes[i][k]->name);
+				printf(tmp->rooms[k]->name);
 				k++;
 			}
 			k--;
-			// printf(" -->%d %d\n", i, k);
-			// printf(buffer_of_pathes[i][k]->linked[0]->name);
-			while (buffer_of_pathes[i][k]->linked[index_links] != NULL)
+			while (tmp->rooms[k]->linked[index_links] != NULL)
 			{
 				printf("HERE\n");
-				if (buffer_of_pathes[i][k + 1] == NULL && buffer_of_pathes[i][k]->linked[index_links]->seen_flag == 0)
+				printf(tmp->rooms[k]->linked[index_links]->name);
+				if (tmp->rooms[k + 1] == NULL)
 				{
 					printf("HERE1\n");
-					buffer_of_pathes[i][k + 1] = buffer_of_pathes[i][k]->linked[index_links];
-					if (ft_strcmp(buffer_of_pathes[i][k]->linked[index_links]->name, farm->rooms[1]->name) != 0)
-						buffer_of_pathes[i][k]->linked[index_links]->seen_flag = 1;
-					flag_of_the_end_of_cycle = 0;
+					if (verificate_inserted_room(tmp->rooms[k]->linked[index_links]->index, pathes, tmp) && (ft_strcmp(tmp->rooms[k]->name, farm->rooms[1]->name) != 0))
+					{
+						tmp->rooms[k + 1] = tmp->rooms[k]->linked[index_links];
+						tmp->linked_indexes[tmp->rooms[k]->linked[index_links]->index] = 1;
+						flag_of_the_end_of_cycle = 0;
+					}
 				}
-				else if (buffer_of_pathes[i][k]->linked[index_links]->seen_flag == 0)
+				else 
 				{
 					printf("HERE2\n");
-					buffer_of_pathes[end_buffer_2lvl + ii] = (room**)malloc(sizeof(room*) * farm->count_of_links);
-					calloc_buffer_2lvl(buffer_of_pathes[end_buffer_2lvl + ii], farm->count_of_links);
-					copy_buffer_2lvl_with_new_el(buffer_of_pathes, end_buffer_2lvl + ii, i, buffer_of_pathes[i][k]->linked[index_links]);
-					ii++;
-					flag_of_the_end_of_cycle = 0;
+					if (verificate_inserted_room(tmp->rooms[k]->linked[index_links]->index, pathes, tmp) && (ft_strcmp(tmp->rooms[k]->name, farm->rooms[1]->name) != 0))
+					{
+						pathes = add_spath_to_pathes(pathes, farm);
+						pathes = copy_buffer_2lvl_with_new_el(pathes, tmp, tmp->rooms[k]->linked[index_links], farm->count_of_rooms);
+						flag_of_the_end_of_cycle = 0;
+					}
 				}
 				printf("OUT1\n");
-				if (ft_strcmp(farm->rooms[1]->name, buffer_of_pathes[i][k]->linked[index_links]->name) == 0)
-				{
-					size_t
-				}
 				index_links++;
 			}
 			printf("WH\n");
-			i++;
+			tmp = tmp->next;
 			index_links = 0;
 			k = 0;
 		}
@@ -125,10 +208,8 @@ room	***find_pathes(farm *farm, room ***buffer_of_pathes)
 			flag_of_the_end_of_cycle = 1;
 		else
 			flag_of_the_end_of_cycle = 0;
-		end_buffer_2lvl = end_buffer_2lvl + ii;
-		ii = 0;
-		i = 0;
+		tmp = pathes;
 	}
-	return (buffer_of_pathes);
+	return (pathes);
 }
 

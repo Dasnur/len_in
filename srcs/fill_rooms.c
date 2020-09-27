@@ -26,7 +26,7 @@ void	init_linked_NULL(room *this_room, size_t count_of_links)
 	}
 }
 
-void	fill_room(char *line, room *room, size_t count_of_links)
+void	fill_room(char *line, room *room, size_t count_of_links, size_t *count_index_room)
 {
 	size_t		i;
 
@@ -51,6 +51,8 @@ void	fill_room(char *line, room *room, size_t count_of_links)
 	line++;
 	room->y = ft_atoi(line);
 	room->count_linked_with = 0;
+	room->index = *count_index_room;
+	(*count_index_room)++;
 }
 
 void	fill_link(t_link* link, char *line)
@@ -89,6 +91,7 @@ void    fill_rooms(farm *farm)
 	size_t	i;
 	size_t	k;
 
+	farm->count_index_room = 0;
 	i = 2;
 	k = 0;
 	tmp_map = farm->map;
@@ -101,7 +104,7 @@ void    fill_rooms(farm *farm)
     	{
 			tmp_map = tmp_map->next;
 			farm->rooms[0] = (room*)malloc(sizeof(room));
-			fill_room(tmp_map->line, farm->rooms[0], farm->count_of_links);
+			fill_room(tmp_map->line, farm->rooms[0], farm->count_of_links, &(farm->count_index_room));
 			tmp_map = tmp_map->next;
 			k++;
 		}
@@ -110,7 +113,7 @@ void    fill_rooms(farm *farm)
 			k++;
 			tmp_map = tmp_map->next;
 			farm->rooms[1] = (room*)malloc(sizeof(room));
-			fill_room(tmp_map->line, farm->rooms[1], farm->count_of_links);
+			fill_room(tmp_map->line, farm->rooms[1], farm->count_of_links, &(farm->count_index_room));
 			tmp_map = tmp_map->next;
 		}
 		else if (tmp_map->line[0] == '#')
@@ -118,7 +121,7 @@ void    fill_rooms(farm *farm)
 		else
 		{
 			farm->rooms[i] = (room*)malloc(sizeof(room));
-			fill_room(tmp_map->line, farm->rooms[i], farm->count_of_links);
+			fill_room(tmp_map->line, farm->rooms[i], farm->count_of_links, &(farm->count_index_room));
 			tmp_map = tmp_map->next;
 			k++;
 			i++;

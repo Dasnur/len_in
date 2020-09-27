@@ -52,6 +52,8 @@ void	links_room(farm *farm)
 		index_of_linked = find_index_of_linked(farm->rooms[index_of_room]->linked);
 		index_of_linked_room = find_index_of_room(farm->links[k]->end, farm);
 		farm->rooms[index_of_room]->linked[index_of_linked] = farm->rooms[index_of_linked_room];
+		index_of_linked = find_index_of_linked(farm->rooms[index_of_linked_room]->linked);
+		farm->rooms[index_of_linked_room]->linked[index_of_linked] = farm->rooms[index_of_room];
 		k++;
 	}
 }
