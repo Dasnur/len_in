@@ -91,6 +91,7 @@ path	*add_spath_to_pathes(path *pathes, farm *farm)
 		pathes = (path *)malloc(sizeof(path));
 		pathes->rooms = (room **)malloc(sizeof(room *) * farm->count_of_rooms);
 		pathes->linked_indexes = (int *)malloc(sizeof(int) * farm->count_of_rooms);
+		pathes->linked_path = NULL;
 		calloc_buffer_ints(pathes->linked_indexes, farm->count_of_rooms);
 		calloc_buffer_2lvl(pathes->rooms, farm->count_of_rooms);
 		pathes->next = NULL;
@@ -102,6 +103,7 @@ path	*add_spath_to_pathes(path *pathes, farm *farm)
 		tmp->next = (path*)malloc(sizeof(path));
 		tmp->next->rooms = (room **)malloc(sizeof(room *) * farm->count_of_rooms);
 		tmp->next->linked_indexes = (int *)malloc(sizeof(int) * farm->count_of_rooms);
+		pathes->linked_path = NULL;
 		calloc_buffer_ints(tmp->next->linked_indexes, farm->count_of_rooms);
 		calloc_buffer_2lvl(tmp->next->rooms, farm->count_of_rooms);
 		tmp->next->next = NULL;

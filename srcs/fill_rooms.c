@@ -32,7 +32,6 @@ void	fill_room(char *line, room *room, size_t count_of_links, size_t *count_inde
 
 	i = 0;
 	init_linked_NULL(room, count_of_links);
-	room->seen_flag = 0;
 	while (line[i] != ' ')
 		i++;
 	room->name = (char *)malloc(sizeof(char) * i);
@@ -52,6 +51,7 @@ void	fill_room(char *line, room *room, size_t count_of_links, size_t *count_inde
 	room->y = ft_atoi(line);
 	room->count_linked_with = 0;
 	room->index = *count_index_room;
+	room->ant = -1;
 	(*count_index_room)++;
 }
 

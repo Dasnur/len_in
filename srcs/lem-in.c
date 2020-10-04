@@ -16,29 +16,45 @@ int		main()
 {
     farm    farm;
     path	*pathes;
+    path    *th;
 
     read_farm(&farm);
     fill_rooms(&farm);
-    // int i = 0;
-    // while (i < farm.count_of_rooms)
-    // {
-    //     printf("fdsf\n");
-    //     printf(farm.rooms[i]->name);
-    //     i++;
-    // }
 	links_room(&farm);
-    // printf(farm.rooms[5]->linked[1]->name);
 	pathes = find_pathes(&farm, pathes);
-    while (pathes != NULL)
-    {
-        int i = 0;
-        while (pathes->rooms[i] != NULL)
-        {
-            printf(pathes->rooms[i]->name);
-            i++;
-        }
-        pathes = pathes->next;
-        printf("\n");
-    }
+    pathes = group_pathes(pathes, &farm);
+	// th = get_best_path(pathes, &farm);
+    // while (th != NULL)
+    // {
+    //     int i = 0;
+    //     while (th->rooms[i] != NULL)
+    //     {
+    //         printf(th->rooms[i]->name);
+    //         i++;
+    //     }
+    //     th = th->next;
+    // }
+    out_pathes(get_best_path(pathes, &farm), &farm);
+    // while (pathes != NULL)
+    // {
+    //     int i = 0;
+    //     while (pathes->rooms[i] != NULL)
+    //     {
+    //         printf(pathes->rooms[i]->name);
+    //         i++;
+    //     }
+    //     i = 0;
+    //     if (pathes->linked_path)
+    //     {
+	// 		printf("\nlinked-->");
+    //         while (pathes->linked_path->rooms[i] != NULL)
+    //         {
+    //             printf(pathes->linked_path->rooms[i]->name);
+    //             i++;
+    //         }
+    //     }
+    //     pathes = pathes->next;
+    //     printf("\n");
+    // }
 	return (0);
 }
