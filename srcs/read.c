@@ -35,6 +35,7 @@ void    read_farm(farm *farm)
 	tmp = farm->map;
 	farm->count_of_links = 0;
 	farm->count_of_rooms = 0;
+	printf("fasdf\n");
 	while (get_next_line(1, &line))
 	{
 		if (str_count_chr(line, ' ') == 2)
