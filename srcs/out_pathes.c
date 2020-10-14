@@ -90,6 +90,15 @@ void	out_pathes(path *th, farm *farm)
 	path	*tmp;
 
 	i = 1;
+	// while (gavno){
+	// 	int p = 0;
+	// 	while (gavno->rooms[p] != NULL){
+	// 		printf(gavno->rooms[p]->name);
+	// 		printf("\n");
+	// 		p++;
+	// 	}
+	// 	gavno = gavno->next;
+	// }
 	th->rooms[0]->ant = i++;
 	while (check_all_is_gone(th))
 	{

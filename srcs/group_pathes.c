@@ -35,7 +35,14 @@ path    *validate_pathes(path *pathes, farm *farm)
 		while (tmp->rooms[i + 1] != NULL)
 			i++;
 		if (ft_strcmp(tmp->rooms[i]->name, farm->rooms[1]->name) != 0)
-			tmp_back->next = tmp->next;
+		{
+			if (tmp_back == pathes){
+				pathes = pathes->next;
+				tmp_back = pathes;
+			}
+			else
+				tmp_back->next = tmp->next;
+		}
 		else
 			tmp_back = tmp_back->next;
 		i = 0;
@@ -78,6 +85,16 @@ path    *group_pathes(path *pathes, farm *farm)
 
     i = 1;
     pathes = validate_pathes(pathes, farm);
+	// gavno =pathes;
+	// while (gavno){
+	// 	int p = 0;
+	// 	while (gavno->rooms[p] != NULL){
+	// 		printf(gavno->rooms[p]->name);
+	// 		printf("\n");
+	// 		p++;
+	// 	}
+	// 	gavno = gavno->next;
+	// }
     tmp = pathes;
 	tmp1 = pathes;
     while (tmp)

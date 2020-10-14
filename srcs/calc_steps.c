@@ -42,7 +42,7 @@ size_t	get_index_min_cost(size_t *mas_cost, size_t len)
 		}
 		i++;
 	}
-	printf("puk\n");
+	// printf("puk\n");
 	return (min_index);
 }
 
@@ -63,7 +63,7 @@ int     calc_steps_path(path *pathes,farm *farm)
 		count_pathes++;
 		tmp = tmp->next;
 	}
-	printf("%d\n", count_pathes);
+	// printf("count_pathes-->%d\n", count_pathes);
 	mas_cost = (size_t *)malloc(sizeof(size_t) * count_pathes);
 	tmp = pathes->linked_path;
 	mas_cost[i++] = steps_in_path(pathes);
@@ -79,7 +79,7 @@ int     calc_steps_path(path *pathes,farm *farm)
 	{
 		k = get_index_min_cost(mas_cost, count_pathes);
 		mas_cost[k] = mas_cost[k] + 1;
-		printf("k-->%d\n", mas_cost[k]);
+		// printf("k-->%d\n", mas_cost[k]);
 		i++;
 	}
 	return (mas_cost[get_index_min_cost(mas_cost, count_pathes)]);
@@ -98,7 +98,7 @@ path	*get_best_path(path *pathes, farm *farm)
 	while (tmp)
 	{
     	steps = calc_steps_path(tmp, farm);
-		printf("steps-->%d\n", steps);
+		// printf("steps-->%d\n", steps);
 		if (steps < count_steps_min)
 		{
 			count_steps_min = steps;

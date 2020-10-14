@@ -166,30 +166,35 @@ path	*find_pathes(farm *farm, path *pathes)
 	{
 		while (tmp)
 		{
-			printf("OH\n");
+			// printf("OH\n");
 			while (tmp->rooms[k] != NULL)
 			{
-				printf(tmp->rooms[k]->name);
+				// printf("%d", k);
+				// printf(tmp->rooms[k]->name);
+				// printf(" ");
 				k++;
 			}
+			// printf("\n");
 			k--;
 			while (tmp->rooms[k]->linked[index_links] != NULL)
 			{
-				printf("HERE\n");
-				printf(tmp->rooms[k]->linked[index_links]->name);
+				// printf("HERE\n");
+				// printf(tmp->rooms[k]->linked[index_links]->name);
 				if (tmp->rooms[k + 1] == NULL)
 				{
-					printf("HERE1\n");
+					// printf("HERE1\n");
 					if (verificate_inserted_room(tmp->rooms[k]->linked[index_links]->index, pathes, tmp) && (ft_strcmp(tmp->rooms[k]->name, farm->rooms[1]->name) != 0))
 					{
+						// printf("HERE1.1\n");
 						tmp->rooms[k + 1] = tmp->rooms[k]->linked[index_links];
 						tmp->linked_indexes[tmp->rooms[k]->linked[index_links]->index] = 1;
+						tmp->rooms[k + 2] = NULL;
 						flag_of_the_end_of_cycle = 0;
 					}
 				}
 				else 
 				{
-					printf("HERE2\n");
+					// printf("HERE2\n");
 					if (verificate_inserted_room(tmp->rooms[k]->linked[index_links]->index, pathes, tmp) && (ft_strcmp(tmp->rooms[k]->name, farm->rooms[1]->name) != 0))
 					{
 						pathes = add_spath_to_pathes(pathes, farm);
@@ -197,15 +202,17 @@ path	*find_pathes(farm *farm, path *pathes)
 						flag_of_the_end_of_cycle = 0;
 					}
 				}
-				printf("OUT1\n");
+				if ((ft_strcmp(tmp->rooms[k]->linked[index_links]->name, tmp->rooms[1]->name) == 0) && (k > farm->count_of_ants + 2))
+					return(pathes);
+				// printf("OUT1\n");
 				index_links++;
 			}
-			printf("WH\n");
+			// printf("WH\n");
 			tmp = tmp->next;
 			index_links = 0;
 			k = 0;
 		}
-		printf("OUT2\n");
+		// printf("OUT2\n");
 		if (!flag_of_the_end_of_cycle)
 			flag_of_the_end_of_cycle = 1;
 		else

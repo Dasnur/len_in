@@ -127,6 +127,7 @@ void    fill_rooms(farm *farm)
 			i++;
 		}
 	}
+	farm->rooms[i] = NULL;
 	i = 0;
 	farm->links = (t_link**)malloc(sizeof(t_link*) * farm->count_of_links);
 	while (i < farm->count_of_links)
