@@ -51,10 +51,9 @@ path	*copy_buffer_2lvl_with_new_el(path *p, path *aim, room *r, size_t count)
 	while (aim->rooms[i + 1] != NULL)
 	{
 		tmp->rooms[i] = aim->rooms[i];
-		// printf(tmp->rooms[i]->name);
-		// printf(aim->rooms[i]->name);
 		i++;
 	}
+	// *tmp = *p;
 	tmp->rooms[i] = r;
 	while (k1 < count)
 	{
@@ -104,121 +103,240 @@ path	*add_spath_to_pathes(path *pathes, farm *farm)
 		tmp->next->rooms = (room **)malloc(sizeof(room *) * farm->count_of_rooms);
 		tmp->next->linked_indexes = (int *)malloc(sizeof(int) * farm->count_of_rooms);
 		pathes->linked_path = NULL;
-		calloc_buffer_ints(tmp->next->linked_indexes, farm->count_of_rooms);
-		calloc_buffer_2lvl(tmp->next->rooms, farm->count_of_rooms);
+		// calloc_buffer_ints(tmp->next->linked_indexes, farm->count_of_rooms);
+		// calloc_buffer_2lvl(tmp->next->rooms, farm->count_of_rooms);
 		tmp->next->next = NULL;
 		// printf("gavno\n");
 	}
 	return pathes;
 }
 
-room	**get_name_node(path *pathes)
-{
-	path	*tmp;
+// room	**get_name_node(path *pathes)
+// {
+// 	path	*tmp;
 
-	tmp = pathes;
-	while (tmp->next != NULL)
-		tmp = tmp->next;
-	return tmp->rooms;
+// 	tmp = pathes;
+// 	while (tmp->next != NULL)
+// 		tmp = tmp->next;
+// 	return tmp->rooms;
+// }
+
+int		verificate_inserted_room(size_t index, path *th)
+{
+	// printf("LOOK-->%d\n", th->linked_indexes[index]);
+	if (th->linked_indexes[index] == 0)
+		return (1);
+	return (0);
 }
 
-int		verificate_inserted_room(size_t index, path *begin, path *th)
+path	*push(path *p, room *r)
 {
-	path	*tmp;
+	size_t	i;
 
-	tmp = begin;
-	while (tmp)
+	i = 0;
+	while (p->rooms[i] != NULL)
+		i++;
+	// printf("I-->%s\n", r->name);
+	p->rooms[i] = r;
+	p->rooms[i + 1] = NULL;
+	p->linked_indexes[r->index] = 1;
+	return (p);
+}
+
+int		preverificate_inserted_room(room *insert, path *p, room *stop, farm *farm)
+{
+	int		*link_indexes;
+	size_t	k;
+	size_t	i;
+
+	i = 0;
+	k = 0;
+	while (ft_strcmp(p->rooms[k]->name, stop->name) != 0)
+		k++;
+	k = k + 1;
+	link_indexes = (int *)malloc(sizeof(int) * farm->count_of_rooms);
+	calloc_buffer_ints(link_indexes, farm->count_of_rooms);
+	while (i < k)
 	{
-		if (tmp == th)
-		{
-			if (th->linked_indexes[index] == 0)
-				return (1);
-			return (0);
-		}
-		tmp = tmp->next;
+		link_indexes[p->rooms[i]->index] = p->linked_indexes[p->rooms[i]->index];
+		i++; 
 	}
+	if (link_indexes[insert->index] == 1)
+	{
+		free(link_indexes);
+		return (0);
+	}
+	free(link_indexes);
+	return (1);
+}
+
+void	copy_path(path *p, path *aim, room *stop, size_t count)
+{
+	size_t	i;
+	path	*tmp;
+	size_t	k;
+
+	k = 0;
+	tmp = p;
+	i = 0;
+	while (tmp->next)
+		tmp = tmp->next;
+	while (ft_strcmp(aim->rooms[i]->name, stop->name) != 0)
+	{
+		tmp->rooms[i] = aim->rooms[i];
+		i++;
+	}
+	tmp->rooms[i] = aim->rooms[i];
+	tmp->rooms[i + 1] = NULL;
+	i++;
+	while (k < i)
+	{
+		tmp->linked_indexes[aim->rooms[k]->index] = aim->linked_indexes[aim->rooms[k]->index];
+		k++;
+	}
+}
+
+void	rec_find_pathes(path **p, room* rt, farm *farm)
+{
+	size_t	i = 0;
+	size_t	flag = 0;
+	path	*tmp = *p;
+
+	while (rt->linked[i] != NULL)
+	{
+		if (ft_strcmp(rt->name, farm->rooms[1]->name) == 0)
+			return ;
+		if (flag == 0)
+		{
+			if (verificate_inserted_room(rt->linked[i]->index, tmp)){
+				tmp = push(tmp, rt->linked[i]);
+				flag = 1;
+				rec_find_pathes(&tmp, rt->linked[i], farm);
+				// size_t ii = 0;
+				// while (tmp->rooms[ii] != NULL){
+				// 	printf("%s ", tmp->rooms[ii]->name);
+				// 	ii++;
+				// }
+				// printf("\n");
+			}
+		}
+		else
+		{
+			if (preverificate_inserted_room(rt->linked[i], tmp, rt, farm))
+			{
+				*p = add_spath_to_pathes(*p, farm);
+				copy_path(*p, tmp, rt, farm->count_of_rooms);
+				flag = 0;
+				while (tmp->next)
+					tmp = tmp->next;
+				if (verificate_inserted_room(rt->linked[i]->index, tmp))
+				{
+					tmp = push(tmp, rt->linked[i]);
+					flag = 1;
+					rec_find_pathes(&tmp, rt->linked[i], farm);
+				}
+			}
+		}
+		i++;
+	}
+	// size_t ii = 0;
+	// while (tmp->rooms[ii] != NULL){
+	// 	printf("%s ", tmp->rooms[ii]->name);
+	// 	ii++;
+	// }
+	// printf("\n");
+	return ;
 }
 
 path	*find_pathes(farm *farm, path *pathes)
 {
 	int		flag_of_the_end_of_cycle;
-	size_t	i;
 	size_t	k;
 	size_t	index_links;
-	size_t	end_buffer_2lvl;
-	size_t	ii;
 	path	*tmp;
-	room 	**tmp_my;
+	size_t	ends;
 
-	ii = 0;
-	end_buffer_2lvl = 1;
+	ends = 0;
+	farm->ends = 0;
 	k = 0;
 	index_links = 0;
-	i = 0;
 	flag_of_the_end_of_cycle = 1;
 	pathes = NULL;
 	pathes = add_spath_to_pathes(pathes, farm);
-	// printf("%s\n", buffer_of_pathes[0][0]->linked[1]->name);
 	pathes->rooms[0] = farm->rooms[0];
 	pathes->linked_indexes[pathes->rooms[0]->index] = 1;
+	rec_find_pathes(&pathes, farm->rooms[0], farm);
+	// printf("gui\n");
+	k = 0;
 	tmp = pathes;
-	while (flag_of_the_end_of_cycle)
+	printf("-->%d\n", farm->ends);
+	while (tmp)
 	{
-		while (tmp)
-		{
-			// printf("OH\n");
-			while (tmp->rooms[k] != NULL)
-			{
-				// printf("%d", k);
-				// printf(tmp->rooms[k]->name);
-				// printf(" ");
-				k++;
-			}
-			// printf("\n");
-			k--;
-			while (tmp->rooms[k]->linked[index_links] != NULL)
-			{
-				// printf("HERE\n");
-				// printf(tmp->rooms[k]->linked[index_links]->name);
-				if (tmp->rooms[k + 1] == NULL)
-				{
-					// printf("HERE1\n");
-					if (verificate_inserted_room(tmp->rooms[k]->linked[index_links]->index, pathes, tmp) && (ft_strcmp(tmp->rooms[k]->name, farm->rooms[1]->name) != 0))
-					{
-						// printf("HERE1.1\n");
-						tmp->rooms[k + 1] = tmp->rooms[k]->linked[index_links];
-						tmp->linked_indexes[tmp->rooms[k]->linked[index_links]->index] = 1;
-						tmp->rooms[k + 2] = NULL;
-						flag_of_the_end_of_cycle = 0;
-					}
-				}
-				else 
-				{
-					// printf("HERE2\n");
-					if (verificate_inserted_room(tmp->rooms[k]->linked[index_links]->index, pathes, tmp) && (ft_strcmp(tmp->rooms[k]->name, farm->rooms[1]->name) != 0))
-					{
-						pathes = add_spath_to_pathes(pathes, farm);
-						pathes = copy_buffer_2lvl_with_new_el(pathes, tmp, tmp->rooms[k]->linked[index_links], farm->count_of_rooms);
-						flag_of_the_end_of_cycle = 0;
-					}
-				}
-				if ((ft_strcmp(tmp->rooms[k]->linked[index_links]->name, tmp->rooms[1]->name) == 0) && (k > farm->count_of_ants + 2))
-					return(pathes);
-				// printf("OUT1\n");
-				index_links++;
-			}
-			// printf("WH\n");
-			tmp = tmp->next;
-			index_links = 0;
-			k = 0;
+		while (tmp->rooms[k] != NULL){
+			printf("%s ", tmp->rooms[k]->name);
+			k++;
 		}
-		// printf("OUT2\n");
-		if (!flag_of_the_end_of_cycle)
-			flag_of_the_end_of_cycle = 1;
-		else
-			flag_of_the_end_of_cycle = 0;
-		tmp = pathes;
+		printf("\n");
+		tmp = tmp->next;
+		k = 0;
 	}
+	printf("\n\n\n");
+
+	// while (flag_of_the_end_of_cycle)
+	// {
+	// 	while (tmp)
+	// 	{
+	// 		// printf("OH\n");
+	// 		while (tmp->rooms[k] != NULL)
+	// 		{
+	// 			// printf("%d", k);
+	// 			// printf(tmp->rooms[k]->name);
+	// 			// printf(" ");
+	// 			k++;
+	// 		}
+	// 		// printf("\n");
+	// 		k--;
+	// 		while (tmp->rooms[k]->linked[index_links] != NULL)
+	// 		{
+	// 			if (verificate_inserted_room(tmp->rooms[k]->linked[index_links]->index, tmp) && (ft_strcmp(tmp->rooms[k]->name, farm->rooms[1]->name) != 0))
+	// 			{
+	// 				if (tmp->rooms[k + 1] == NULL)
+	// 				{
+	// 					tmp->rooms[k + 1] = tmp->rooms[k]->linked[index_links];
+	// 					tmp->linked_indexes[tmp->rooms[k]->linked[index_links]->index] = 1;
+	// 					tmp->rooms[k + 2] = NULL;
+	// 					flag_of_the_end_of_cycle = 0;
+	// 				}
+	// 				else 
+	// 				{
+	// 					pathes = add_spath_to_pathes(pathes, farm);
+	// 					pathes = copy_buffer_2lvl_with_new_el(pathes, tmp, tmp->rooms[k]->linked[index_links], farm->count_of_rooms);
+	// 					flag_of_the_end_of_cycle = 0;
+	// 				}
+	// 			}
+	// 			if ((ft_strcmp(tmp->rooms[k]->linked[index_links]->name, farm->rooms[1]->name) == 0))
+	// 			{
+	// 				if (ends > farm->count_of_ants)
+	// 				{
+	// 					// printf("%s\n", tmp->rooms[k]->linked[index_links]->name);
+	// 					return (pathes);
+	// 				}
+	// 				ends++;
+	// 			}
+	// 			index_links++;
+	// 		}
+	// 		tmp = tmp->next;
+	// 		index_links = 0;
+	// 		k = 0;
+	// 	}
+	// 	// printf("OUT2\n");
+	// 	if (!flag_of_the_end_of_cycle)
+	// 		flag_of_the_end_of_cycle = 1;
+	// 	else
+	// 		flag_of_the_end_of_cycle = 0;
+	// 	tmp = pathes;
+	// 	ends = 0;
+	// }
 	return (pathes);
 }
 

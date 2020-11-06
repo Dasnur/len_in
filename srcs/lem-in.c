@@ -19,15 +19,19 @@ int		main()
     path    *th;
 
     read_farm(&farm);
-    // printf("read-success\n");
+    printf("read-success\n");
     fill_rooms(&farm);
-    // printf("fill-success\n");
+    printf("fill-success\n");
     // printf(farm.rooms[0]->name);
     // printf("\n");
 	links_room(&farm);
-    // printf("links-success\n");
+    printf("links-success\n");
 	pathes = find_pathes(&farm, pathes);
+    printf("pathes finded:\n");
     pathes = group_pathes(pathes, &farm);
+    printf("pathes grouped\n");
+    // out_map(&farm);
     out_pathes(get_best_path(pathes, &farm), &farm);
+    printf("%ld\n", farm.trash);
 	return (0);
 }

@@ -24,6 +24,8 @@ size_t	find_index_of_room(const char *find, farm *farm)
 			return (i);
 		i++;
 	}
+	printf("ERROR: Invelid link\n");
+	exit(6);
 }
 
 size_t	find_index_of_linked(room **rooms)

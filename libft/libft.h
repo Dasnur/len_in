@@ -19,14 +19,14 @@
 # include <fcntl.h>
 
 # define BUFF_SIZE 1
-# define FD_MAX 1000
+# define FD_SIZE 4096
 
-typedef struct		s_list
+typedef struct	s_list
 {
 	void			*content;
 	size_t			content_size;
 	struct s_list	*next;
-}					t_list;
+}				t_list;
 
 typedef	struct		s_get
 {

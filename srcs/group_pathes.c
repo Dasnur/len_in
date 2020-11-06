@@ -28,25 +28,30 @@ path    *validate_pathes(path *pathes, farm *farm)
 		while (tmp_back->rooms[i + 1] != NULL)
 			i++;
 		if (ft_strcmp(tmp_back->rooms[i]->name, farm->rooms[1]->name) != 0)
-			tmp_back = NULL;
+			exec("ERROR: no pathes\n", 10);
 	}
 	while (tmp)
-	{
-		while (tmp->rooms[i + 1] != NULL)
+	{	
+		while (tmp_back->rooms[i + 1] != NULL)
 			i++;
-		if (ft_strcmp(tmp->rooms[i]->name, farm->rooms[1]->name) != 0)
+		if (tmp_back == pathes && (ft_strcmp(tmp_back->rooms[i]->name, farm->rooms[1]->name) != 0))
 		{
-			if (tmp_back == pathes){
-				pathes = pathes->next;
-				tmp_back = pathes;
-			}
-			else
-				tmp_back->next = tmp->next;
+			pathes = pathes->next;
+			tmp_back = pathes;
+			tmp = tmp->next;
 		}
 		else
-			tmp_back = tmp_back->next;
+		{
+			i = 0;
+			while (tmp->rooms[i + 1] != NULL)
+				i++;
+			if (ft_strcmp(tmp->rooms[i]->name, farm->rooms[1]->name) != 0)
+				tmp_back->next = tmp->next;
+			else
+				tmp_back = tmp_back->next;
+			tmp = tmp->next;
+		}
 		i = 0;
-		tmp = tmp->next;
     }
     return (pathes);
 }
@@ -57,22 +62,31 @@ path	*add_linked_path(path *p, path *aim, farm *farm)
 	size_t	i;
 
 	i = 0;
-	tmp = p;
-	while (tmp != NULL)
-		tmp = tmp->next;
-	tmp = (path *)malloc(sizeof(path));
-	tmp->rooms = (room**)malloc(sizeof(room*) * farm->count_of_rooms);
-	while (aim->rooms[i] != NULL)
-	{
-		tmp->rooms[i] = aim->rooms[i];
-		i++;
-	}
-	// printf(tmp->rooms[0]->name);
-	// printf("kal\n");
-	tmp->rooms[i] = NULL;
-	tmp->next = NULL;
 	if (p == NULL)
-		p = tmp;
+	{
+		p = (path *)malloc(sizeof(path));
+		p->rooms = (room**)malloc(sizeof(room*) * farm->count_of_rooms);
+		while (aim->rooms[i] != NULL)
+		{
+			p->rooms[i] = aim->rooms[i];
+			i++;
+		}
+		p->rooms[i] = NULL;
+		p->next = NULL;
+	}
+	else
+	{
+		tmp = p;
+		while (tmp->next != NULL)
+			tmp = tmp->next;
+		tmp->next = (path *)malloc(sizeof(path));
+		tmp->next->rooms = (room**)malloc(sizeof(room*) * farm->count_of_rooms);
+		while (aim->rooms[i] != NULL)
+		{
+			tmp->next->rooms[i] = aim->rooms[i];
+			i++;
+		}
+	}
 	return p;
 }
 
@@ -80,40 +94,57 @@ path    *group_pathes(path *pathes, farm *farm)
 {
     path    *tmp;
 	path	*tmp1;
+	path	*gavno;
     size_t  i;
 	size_t	k;
-
+	path *tmp_gavno;
     i = 1;
-    pathes = validate_pathes(pathes, farm);
-	// gavno =pathes;
+
+	gavno =pathes;
 	// while (gavno){
 	// 	int p = 0;
 	// 	while (gavno->rooms[p] != NULL){
 	// 		printf(gavno->rooms[p]->name);
-	// 		printf("\n");
+	// 		printf(" ");
 	// 		p++;
 	// 	}
+	// 	printf("\n");
 	// 	gavno = gavno->next;
 	// }
+	// printf("\n\n\n");
+    pathes = validate_pathes(pathes, farm);
+	gavno =pathes;
+	while (gavno){
+		int p = 0;
+		while (gavno->rooms[p] != NULL){
+			printf(gavno->rooms[p]->name);
+			printf(" ");
+			p++;
+		}
+		printf("\n");
+		gavno = gavno->next;
+	}
+	printf("\n\n\n");
     tmp = pathes;
-	tmp1 = pathes;
+	tmp1 = pathes->next;
     while (tmp)
     {
+		tmp->linked_path = NULL;
 		while (tmp1)
 		{
 			while ((tmp->rooms[i + 1] != NULL) && (tmp1->linked_indexes[tmp->rooms[i]->index] == 0))
 				i++;
 			if (tmp->rooms[i + 1] == NULL)
-			{
 				tmp->linked_path = add_linked_path(tmp->linked_path, tmp1, farm);
-				// printf(tmp->linked_path->rooms[0]->name);
-				// printf("asdf\n");
-			}
 			i = 1;
 			tmp1 = tmp1->next;
 		}
-		tmp1 = pathes;
+		// printf("aaa\n");
         tmp = tmp->next;
+		if (tmp)
+			tmp1 = tmp->next;
     }
+	gavno = pathes;
+	// printf("HUIII\n");
     return (pathes);
 }

@@ -52,6 +52,7 @@ void	fill_room(char *line, room *room, size_t count_of_links, size_t *count_inde
 	room->count_linked_with = 0;
 	room->index = *count_index_room;
 	room->ant = -1;
+	room->seen = 0;
 	(*count_index_room)++;
 }
 
@@ -94,15 +95,22 @@ void    fill_rooms(farm *farm)
 	farm->count_index_room = 0;
 	i = 2;
 	k = 0;
+	printf("dfasd\n");
+	farm->rooms = (room**)malloc(sizeof(room*) * (farm->count_of_rooms));
+	farm->rooms[0] = NULL;
+	farm->rooms[1] = NULL;
 	tmp_map = farm->map;
 	farm->count_of_ants = ft_atoi(farm->map->line);
+	if (farm->count_of_ants < 1)
+		exec("ERROR: Number of ants is incorrect\n", 1);
 	tmp_map = tmp_map->next;
-	farm->rooms = (room**)malloc(sizeof(room*) * (farm->count_of_rooms));
 	while (k < farm->count_of_rooms)
 	{
 		if (ft_strcmp(tmp_map->line, "##start") == 0)
     	{
 			tmp_map = tmp_map->next;
+			while (tmp_map->line[0] == '#')
+				tmp_map = tmp_map->next;
 			farm->rooms[0] = (room*)malloc(sizeof(room));
 			fill_room(tmp_map->line, farm->rooms[0], farm->count_of_links, &(farm->count_index_room));
 			tmp_map = tmp_map->next;
@@ -112,6 +120,10 @@ void    fill_rooms(farm *farm)
 		{
 			k++;
 			tmp_map = tmp_map->next;
+			while (tmp_map->line[0] == '#')
+				tmp_map = tmp_map->next;
+			// if (str_count_chr(tmp_map->line, ' ') != 1)
+			// 	exec("ERROR: No end room\n", 2);
 			farm->rooms[1] = (room*)malloc(sizeof(room));
 			fill_room(tmp_map->line, farm->rooms[1], farm->count_of_links, &(farm->count_index_room));
 			tmp_map = tmp_map->next;
@@ -127,6 +139,8 @@ void    fill_rooms(farm *farm)
 			i++;
 		}
 	}
+	if (farm->rooms[0] == NULL || farm->rooms[1] == NULL)
+		exec("ERROR: Input has no start or end room\n", 2);
 	farm->rooms[i] = NULL;
 	i = 0;
 	farm->links = (t_link**)malloc(sizeof(t_link*) * farm->count_of_links);

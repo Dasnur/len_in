@@ -26,6 +26,7 @@ int		main()
     printf("links-success\n");
 	pathes = find_pathes(&farm, pathes);
     pathes = group_pathes(pathes, &farm);
+    out_map(&farm);
     out_pathes(get_best_path(pathes, &farm), &farm);
 	return (0);
 }

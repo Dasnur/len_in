@@ -18,14 +18,7 @@ room	*find_room_of_ant(int ant, path *th)
 	int		i;
 	path	*tmp;
 
-	i = 1;
-	while (th->rooms[i] != NULL)
-	{
-		if (th->rooms[i]->ant == ant)
-			return (th->rooms[i]);
-		i++;
-	}
-	tmp = th->linked_path;
+	tmp = th;
 	while (tmp)
 	{
 		i = 1;
@@ -40,20 +33,30 @@ room	*find_room_of_ant(int ant, path *th)
 	return (NULL);
 }
 
-void	print_this_pos(path *th, farm *farm)
+int		print_this_pos(path *th, farm *farm)
 {
 	size_t	i;
 	room	*room_ant;
+	int		flag;
 
+	flag = 0;
 	i = 1;
-	while (i <= farm->count_of_ants)
+	while (i <= farm->count_of_ants) //Перепиасать
 	{
 		room_ant = find_room_of_ant(i, th);
-		if (room_ant && (ft_strcmp(room_ant->name, farm->rooms[1]->name) != 0))
+		if (room_ant)
+		{
+			flag = 1;
+			// printf("%s\n", room_ant->name);
 			printf("L%d-%s ", i, room_ant->name);
+		}
 		i++;
 	}
+	farm->trash++;
 	printf("\n");
+	if (flag == 0)
+		return (1);
+	return (0);
 }
 
 int		check_all_is_gone(path *th)
@@ -61,19 +64,13 @@ int		check_all_is_gone(path *th)
 	size_t	i;
 	path	*tmp;
 
-	tmp = th->linked_path;
-	i = 0;
-	while (th->rooms[i + 1] != NULL)
-	{
-		if (th->rooms[i]->ant != -1)
-			return (1);
-		i++;
-	}
+	tmp = th;
 	while (tmp)
 	{
 		i = 0;
 		while (tmp->rooms[i + 1] != NULL)
 		{
+			// printf("%d\n", tmp->rooms[i]->ant);
 			if (tmp->rooms[i]->ant != -1)
 				return (1);
 			i++;
@@ -85,8 +82,10 @@ int		check_all_is_gone(path *th)
 
 void	out_pathes(path *th, farm *farm)
 {
+	farm->trash = 0;
 	size_t  i;
 	size_t  k;
+	size_t	m;
 	path	*tmp;
 
 	i = 1;
@@ -102,27 +101,8 @@ void	out_pathes(path *th, farm *farm)
 	th->rooms[0]->ant = i++;
 	while (check_all_is_gone(th))
 	{
-		k = 0;
-		while (th->rooms[k + 1] != NULL)
-			k++;
-		while (k > 0)
-		{
-			if (th->rooms[k - 1]->ant != - 1)
-			{
-				th->rooms[k]->ant = th->rooms[k - 1]->ant;
-				th->rooms[k - 1]->ant = -1;
-				if (th->rooms[k + 1] == NULL)
-					printf("L%d-%s ", th->rooms[k]->ant, th->rooms[k]->name);
-				if (k - 1 == 0 && i > farm->count_of_ants)
-					th->rooms[k - 1]->ant = -1;
-				else if (k - 1 == 0)
-					th->rooms[k - 1]->ant = i++;
-				else
-					th->rooms[k - 1]->ant = -1;
-			}
-			k--;
-		}
-		tmp = th->linked_path;
+		tmp = th;
+		m = 0;
 		while (tmp)
 		{
 			k = 0;
@@ -132,21 +112,30 @@ void	out_pathes(path *th, farm *farm)
 			{
 				if (tmp->rooms[k - 1]->ant != - 1)
 				{
-					tmp->rooms[k]->ant = tmp->rooms[k - 1]->ant;
-					tmp->rooms[k - 1]->ant = -1;
-					if (tmp->rooms[k + 1] == NULL)
-						printf("L%d-%s ", tmp->rooms[k]->ant, tmp->rooms[k]->name);
-					if (k - 1 == 0 && i > farm->count_of_ants)
-						tmp->rooms[k - 1]->ant = -1;
-					else if (k - 1 == 0)
+					if (k - 1 != 0)
+					{
+						tmp->rooms[k]->ant = tmp->rooms[k - 1]->ant;
+						tmp->rooms[k - 1]->ant = -1;	
+					}
+						// printf("\n%d\n", farm->ants_in_path[m]);
+					if (k - 1 == 0 && farm->ants_in_path[m] != 0)
+					{
+						tmp->rooms[k]->ant = tmp->rooms[k - 1]->ant;
+						farm->ants_in_path[m] = farm->ants_in_path[m] - 1;
 						tmp->rooms[k - 1]->ant = i++;
-					else
+					}
+					if (k - 1 == 0 && (i > farm->count_of_ants + 1))
 						tmp->rooms[k - 1]->ant = -1;
+					// if (tmp->rooms[k + 1] == NULL)
+					// 	printf("L%d-%s ", tmp->rooms[k]->ant, tmp->rooms[k]->name);
 				}
 				k--;
 			}
+			// printf("aaa\n");
+			m++;
 			tmp = tmp->next;
 		}
-		print_this_pos(th, farm);
+	if (print_this_pos(th, farm))
+		return ;
 	}
 }
