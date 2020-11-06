@@ -22,7 +22,7 @@ DIR_S = srcs
 
 DIR_H = includes
 
-LIBFT = libft
+LIBFT = ../libft
 
 FILES = format_d_u.c \
 format_d_u_convert_toint.c \

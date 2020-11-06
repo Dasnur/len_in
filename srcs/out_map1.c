@@ -1,26 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   out_map.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/06 13:52:52 by atote             #+#    #+#             */
-/*   Updated: 2020/11/06 13:52:52 by atote            ###   ########.fr       */
+/*   Created: 2020/11/06 13:55:01 by atote             #+#    #+#             */
+/*   Updated: 2020/11/06 13:55:04 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../lem-in.h"
 
-void	ft_bzero(void *s, size_t n)
+void	out_map(farm *farm)
 {
-	unsigned char	*pt;
+	size_t	i;
 
-	pt = (unsigned char*)s;
-	while (n > 0)
+	i = 0;
+	while (farm->map->next)
 	{
-		*pt = 0;
-		pt++;
-		n--;
+		farm->map = farm->map->next;
 	}
+	return ;
 }
