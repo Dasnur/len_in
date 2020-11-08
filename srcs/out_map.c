@@ -6,23 +6,25 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 13:55:01 by atote             #+#    #+#             */
-/*   Updated: 2020/11/06 13:55:04 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/08 20:48:51 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft/libft.h"
-#include "../lem-in.h"
+#include "../includes/lem_in.h"
+#include "../ft_printf/includes/libftprintf.h"
 
-void	out_map(farm *farm)
+void	out_map(t_farm *farma)
 {
 	size_t	i;
+	t_map	*tmp;
 
+	tmp = farma->mapa;
 	i = 0;
-	while (farm->map->next)
+	while (tmp)
 	{
-		printf("%s\n", farm->map->line);
-		farm->map = farm->map->next;
+		ft_printf("%s\n", tmp->line);
+		tmp = tmp->next;
 	}
-	printf("\n");
-	return ;
+	ft_printf("\n");
 }

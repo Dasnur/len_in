@@ -219,5 +219,6 @@ int							ft_choose_flags_help(char *line, int i);
 void						format_ox_fourth_help(t_params *m, int flag);
 int							help_ft_printf(char *line, int i);
 int							help2_ft_printf(va_list a, int g_count);
+int							ft_printf(char *line, ...);
 
 #endif

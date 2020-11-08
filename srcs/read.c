@@ -5,113 +5,81 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/29 19:04:57 by atote             #+#    #+#             */
-/*   Updated: 2020/08/29 19:04:57 by atote            ###   ########.fr       */
+/*   Created: 2020/11/07 20:54:09 by atote             #+#    #+#             */
+/*   Updated: 2020/11/08 20:09:06 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "../libft/libft.h"
-#include "../lem-in.h"
+#include "../includes/lem_in.h"
+#include "../ft_printf/includes/libftprintf.h"
 
-void	exec(const char *line, size_t code)
+void	exec(const char *line, size_t code, t_farm *farma)
 {
-	printf("%s", line);
+	clear_mapa(farma);
+	clear_links(farma);
+	clear_rooms(farma);
+	free(farma->rooms);
+	ft_printf("%s", line);
 	exit(code);
 }
 
 size_t	str_count_chr(const char *line, char a)
 {
-	size_t count = 0;
+	size_t count;
 
+	count = 0;
 	while (*line != '\0')
 	{
 		if (*line == a)
 			count++;
 		line++;
 	}
-	return count;
+	return (count);
 }
 
-int		check_duplicate_name(char *line, map *farm_map, map *cur)
+void	read_farm_room(char *line, t_farm *farma, t_map *tmp)
 {
-	map		*begin;
-
-	begin = farm_map;
-	if (str_count_chr(line, '#') == 1)
-		return (0);
-	while (begin != cur && begin)
-	{
-		if (ft_strcmp(line, begin->line) == 0)
-			return (1);
-		begin = begin->next;
-	}
-	return (0);
+	if (check_duplicate_name(line, farma->mapa, tmp))
+		exec("ERROR: Input has room name duplicate\n", 3, farma);
+	if (check_coordinates(line))
+		exec("ERROR: letter_in_coordinates\n", 5, farma);
+	farma->count_of_rooms++;
 }
 
-int		check_coordinates(char *line)
+void	exec_no_links_nostart_end(t_farm *farma)
 {
-	size_t	i;
-
-	i = 0;
-	while (line[i] != ' ')
-		i++;
-	i++;
-	while (line[i] != ' ')
-	{
-		if (line[i] < '0' || line[i] > '9')
-			return (1);
-		i++;
-	}
-	i++;
-	while (line[i] != '\0')
-	{
-		if (line[i] < '0' || line[i] > '9')
-			return (1);
-		i++;
-	}
-	return (0);
+	if (farma->count_of_rooms < 2)
+		exec("Error: Input has no start or end room\n", 4, farma);
+	if (farma->count_of_links == 0)
+		exec("ERROR: No links\n", 9, farma);
 }
 
-void    read_farm(farm *farm)
+void	read_farm(t_farm *farma)
 {
 	char	*line;
-	map		*tmp;
-	map		*prev;
+	t_map	*tmp;
+	t_map	*prev;
 
-	farm->map = (map*)malloc(sizeof(map));
-	tmp = farm->map;
-	farm->count_of_links = 0;
-	farm->count_of_rooms = 0;
+	farma->mapa = (t_map*)malloc(sizeof(t_map));
+	tmp = farma->mapa;
+	farma->count_of_links = 0;
+	farma->count_of_rooms = 0;
 	while (get_next_line(0, &line) > 0)
 	{
 		if (str_count_chr(line, ' ') == 2)
-		{
-			if (check_duplicate_name(line, farm->map, tmp))
-				exec("ERROR: Input has room name duplicate\n", 3);
-			if (check_coordinates(line))
-				exec("ERROR: letter_in_coordinates\n", 5);
-			farm->count_of_rooms++;
-		}
+			read_farm_room(line, farma, tmp);
 		else if (str_count_chr(line, '-') == 1)
-			farm->count_of_links++;
-		else if (str_count_chr(line, '#') == 0 && tmp != farm->map)
-			exec("ERROR: invalid line\n", 2);
+			farma->count_of_links++;
+		else if (str_count_chr(line, '#') == 0 && tmp != farma->mapa)
+			exec1("ERROR: invalid line\n", 2, farma, line);
 		tmp->line = ft_strdup(line);
-		tmp->next = (map*)malloc(sizeof(map));
+		free(line);
+		tmp->next = (t_map*)malloc(sizeof(t_map));
 		prev = tmp;
 		tmp = tmp->next;
 	}
+	free(prev->next);
 	prev->next = NULL;
-	// printf("fasgd\n");
-	// while (farm->map->next)
-	// {
-	// 	printf("%s\n", farm->map->line);
-	// 	farm->map = farm->map->next;
-	// }
-	// printf("fasdf\n");
-	if (farm->count_of_rooms < 2)
-		exec("Error: Input has no start or end room\n", 4);
-	if (farm->count_of_links == 0)
-		exec("ERROR: No links\n", 9);
+	exec_no_links_nostart_end(farma);
 }

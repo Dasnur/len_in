@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/07 20:19:09 by atote             #+#    #+#             */
-/*   Updated: 2020/03/09 15:02:05 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/08 18:26:07 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@
 # define BUFF_SIZE 1
 # define FD_SIZE 4096
 
-typedef struct	s_list
+typedef struct		s_list
 {
 	void			*content;
 	size_t			content_size;
 	struct s_list	*next;
-}				t_list;
+}					t_list;
 
 typedef	struct		s_get
 {

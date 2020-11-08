@@ -6,57 +6,41 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 10:32:59 by atote             #+#    #+#             */
-/*   Updated: 2020/08/31 10:32:59 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/08 19:34:07 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft/libft.h"
-#include "../lem-in.h"
+#include "../includes/lem_in.h"
 
-void	init_linked_NULL(room *this_room, size_t count_of_links)
-{
-	size_t	i;
-
-	i = 0;
-	this_room->linked = (room**)malloc(sizeof(room*) * count_of_links);
-	while (i < count_of_links)
-	{
-		this_room->linked[i] = NULL;
-		i++;
-	}
-}
-
-void	fill_room(char *line, room *room, size_t count_of_links, size_t *count_index_room)
+void	fill_room(char *line, t_room *tr, size_t *c_ind_r)
 {
 	size_t		i;
 
 	i = 0;
-	init_linked_NULL(room, count_of_links);
 	while (line[i] != ' ')
 		i++;
-	room->name = (char *)malloc(sizeof(char) * i);
+	tr->name = (char *)malloc(sizeof(char) * (i));
 	i = 0;
 	while (*line != ' ')
 	{
-		room->name[i] = *line;
+		tr->name[i] = *line;
 		i++;
 		line++;
 	}
-	room->name[i] = '\0';
+	tr->name[i] = '\0';
 	line++;
-	room->x = ft_atoi(line);
+	tr->x = ft_atoi(line);
 	while (*line != ' ')
 		line++;
 	line++;
-	room->y = ft_atoi(line);
-	room->count_linked_with = 0;
-	room->index = *count_index_room;
-	room->ant = -1;
-	room->seen = 0;
-	(*count_index_room)++;
+	tr->y = ft_atoi(line);
+	tr->index = *c_ind_r;
+	tr->ant = -1;
+	(*c_ind_r)++;
 }
 
-void	fill_link(t_link* link, char *line)
+void	fill_link(t_link *link, char *line)
 {
 	size_t	i;
 
@@ -80,80 +64,58 @@ void	fill_link(t_link* link, char *line)
 	i = 0;
 	while (*line != '\0')
 	{
-		link->end[i] = *line;
+		link->end[i++] = *line;
 		line++;
-		i++;
 	}
 }
 
-void    fill_rooms(farm *farm)
+void	fill_l(t_farm *farma, t_map *tmp_map)
 {
-	map		*tmp_map;
 	size_t	i;
-	size_t	k;
 
-	farm->count_index_room = 0;
-	i = 2;
-	k = 0;
-	printf("dfasd\n");
-	farm->rooms = (room**)malloc(sizeof(room*) * (farm->count_of_rooms));
-	farm->rooms[0] = NULL;
-	farm->rooms[1] = NULL;
-	tmp_map = farm->map;
-	farm->count_of_ants = ft_atoi(farm->map->line);
-	if (farm->count_of_ants < 1)
-		exec("ERROR: Number of ants is incorrect\n", 1);
-	tmp_map = tmp_map->next;
-	while (k < farm->count_of_rooms)
-	{
-		if (ft_strcmp(tmp_map->line, "##start") == 0)
-    	{
-			tmp_map = tmp_map->next;
-			while (tmp_map->line[0] == '#')
-				tmp_map = tmp_map->next;
-			farm->rooms[0] = (room*)malloc(sizeof(room));
-			fill_room(tmp_map->line, farm->rooms[0], farm->count_of_links, &(farm->count_index_room));
-			tmp_map = tmp_map->next;
-			k++;
-		}
-		else if (ft_strcmp(tmp_map->line, "##end") == 0)
-		{
-			k++;
-			tmp_map = tmp_map->next;
-			while (tmp_map->line[0] == '#')
-				tmp_map = tmp_map->next;
-			// if (str_count_chr(tmp_map->line, ' ') != 1)
-			// 	exec("ERROR: No end room\n", 2);
-			farm->rooms[1] = (room*)malloc(sizeof(room));
-			fill_room(tmp_map->line, farm->rooms[1], farm->count_of_links, &(farm->count_index_room));
-			tmp_map = tmp_map->next;
-		}
-		else if (tmp_map->line[0] == '#')
-			tmp_map = tmp_map->next;
-		else
-		{
-			farm->rooms[i] = (room*)malloc(sizeof(room));
-			fill_room(tmp_map->line, farm->rooms[i], farm->count_of_links, &(farm->count_index_room));
-			tmp_map = tmp_map->next;
-			k++;
-			i++;
-		}
-	}
-	if (farm->rooms[0] == NULL || farm->rooms[1] == NULL)
-		exec("ERROR: Input has no start or end room\n", 2);
-	farm->rooms[i] = NULL;
 	i = 0;
-	farm->links = (t_link**)malloc(sizeof(t_link*) * farm->count_of_links);
-	while (i < farm->count_of_links)
+	if (farma->rooms[0] == NULL || farma->rooms[1] == NULL)
+		exec("ERROR: Input has no start or end room\n", 2, farma);
+	farma->links = (t_link**)malloc(sizeof(t_link*) * farma->count_of_links);
+	while (i < farma->count_of_links)
 	{
 		if (tmp_map->line[0] == '#')
 			tmp_map = tmp_map->next;
 		else
 		{
-			farm->links[i] = (t_link*)malloc(sizeof(t_link));
-			fill_link(farm->links[i], tmp_map->line);
+			farma->links[i] = (t_link*)malloc(sizeof(t_link));
+			fill_link(farma->links[i], tmp_map->line);
 			tmp_map = tmp_map->next;
 			i++;
 		}
 	}
+}
+
+void	fill_rooms(t_farm *farma)
+{
+	t_map	*tmp_map;
+	size_t	i;
+	size_t	k;
+
+	i = 2;
+	k = 0;
+	tmp_map = farma->mapa;
+	tmp_map = tmp_map->next;
+	init_farma(farma);
+	while (k < farma->count_of_rooms)
+	{
+		if (ft_strcmp(tmp_map->line, "##start") == 0)
+			fill_start_end(farma, &tmp_map, &k, 0);
+		else if (ft_strcmp(tmp_map->line, "##end") == 0)
+			fill_start_end(farma, &tmp_map, &k, 1);
+		else if (tmp_map->line[0] == '#')
+			tmp_map = tmp_map->next;
+		else
+		{
+			fill_start_end(farma, &tmp_map, &k, i);
+			i++;
+		}
+	}
+	farma->rooms[i] = NULL;
+	fill_l(farma, tmp_map);
 }
