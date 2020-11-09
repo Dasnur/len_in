@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 15:26:16 by atote             #+#    #+#             */
-/*   Updated: 2020/11/09 09:49:31 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/09 10:18:31 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,25 +87,25 @@ void	bf_clear(t_room **p, int *d, t_path *tpath)
 	free(tpath);
 }
 
-t_path	*bellman_ford(t_farm *farma)
+t_path	*bellman_ford(t_farm *f)
 {
 	int		*d;
 	t_room	**p;
-	t_path	*tpath;
-	t_path	*rpath;
+	t_path	*tp;
+	t_path	*rp;
 
-	d = (int *)malloc(sizeof(int) * (farma->count_of_rooms + 5));
-	p = (t_room **)malloc(sizeof(t_room*) * (farma->count_of_rooms + 5));
-	tpath = (t_path *)malloc(sizeof(t_path) * 2);
-	rpath = (t_path *)malloc(sizeof(t_path) * 2);
-	tpath->rooms = (t_room **)malloc(sizeof(t_room *) * (farma->count_of_rooms + 5));
-	rpath->rooms = (t_room **)malloc(sizeof(t_room *) * (farma->count_of_rooms + 5));
-	d[farma->rooms[0]->index] = 0;
-	init_d_farma(farma, &d);
-	fill_vector_of_pathes(farma, &d, &p);
-	if (d[farma->rooms[1]->index] == INF)
-		return (vv_clear(p, d, tpath, rpath));
-	recovery_path(farma, rpath, tpath, p);
-	bf_clear(p, d, tpath);
-	return (rpath);
+	d = (int *)malloc(sizeof(int) * (f->count_of_rooms + 5));
+	p = (t_room **)malloc(sizeof(t_room*) * (f->count_of_rooms + 5));
+	tp = (t_path *)malloc(sizeof(t_path) * 2);
+	rp = (t_path *)malloc(sizeof(t_path) * 2);
+	tp->rooms = (t_room **)malloc(sizeof(t_room *) * (f->count_of_rooms + 5));
+	rp->rooms = (t_room **)malloc(sizeof(t_room *) * (f->count_of_rooms + 5));
+	d[f->rooms[0]->index] = 0;
+	init_d_farma(f, &d);
+	fill_vector_of_pathes(f, &d, &p);
+	if (d[f->rooms[1]->index] == INF)
+		return (vv_clear(p, d, tp, rp));
+	recovery_path(f, rp, tp, p);
+	bf_clear(p, d, tp);
+	return (rp);
 }

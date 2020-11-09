@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 23:56:43 by atote             #+#    #+#             */
-/*   Updated: 2020/11/09 09:54:05 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/09 10:20:12 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ t_path	*init_list_path(t_path *p, int f, t_farm *pf)
 	if (f == 2)
 	{
 		p->next = (t_path*)malloc(sizeof(*p) * 2);
-		p->next->rooms = (t_room**)malloc(sizeof(t_room*) * (pf->count_of_rooms + 5));
+		p->next->rooms = (t_room**)malloc(sizeof(t_room*)
+		* (pf->count_of_rooms + 5));
 		p->next->rooms[0] = pf->rooms[0];
 		p->next->next = NULL;
 		p = p->next;
