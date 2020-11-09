@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 21:19:53 by atote             #+#    #+#             */
-/*   Updated: 2020/11/08 20:10:37 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/08 23:11:37 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,6 @@ void	exec1(const char *line, size_t code, t_farm *farma, char *line1)
 {
 	free(line1);
 	clear_mapa(farma);
-	clear_links(farma);
-	clear_rooms(farma);
-	free(farma->rooms);
 	ft_printf("%s", line);
 	exit(code);
 }

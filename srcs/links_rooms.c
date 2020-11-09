@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 17:13:41 by atote             #+#    #+#             */
-/*   Updated: 2020/11/08 19:33:28 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/08 23:34:48 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ size_t	find_index_of_room(const char *find, t_farm *farma)
 			return (i);
 		i++;
 	}
-	ft_printf("ERROR: Invelid link\n");
+	ft_printf("ERROR: Invalid link\n");
 	exit(6);
 }
 

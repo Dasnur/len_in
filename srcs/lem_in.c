@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 15:05:41 by atote             #+#    #+#             */
-/*   Updated: 2020/11/08 19:46:48 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/09 09:50:30 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ int	main(void)
 	printf("fill-success\n");
 	links_room(&farma);
 	printf("links-success\n");
-	pats = (t_path**)malloc(sizeof(t_path*) * (farma.count_of_links));
+	pats = (t_path**)malloc(sizeof(t_path*) * (farma.count_of_links + 2));
 	k = 0;
 	while ((short_path = bellman_ford(&farma)))
 	{
 		if (pats[k] != NULL)
-			pats[k] = (t_path *)malloc(sizeof(t_path));
+			pats[k] = (t_path *)malloc(sizeof(t_path) * 2);
 		delete_edges(short_path, &farma);
 		pats[k] = get_shortest_path(&farma, short_path);
 		free(short_path->rooms);
@@ -64,6 +64,6 @@ int	main(void)
 	out_map(&farma);
 	out_pathes(get_best_path(pats, &farma), &farma);
 	clear(&farma, pats);
-	// printf("%ld\n", farma.trash);
+	printf("%ld\n", farma.trash);
 	return (0);
 }

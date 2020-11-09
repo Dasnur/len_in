@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 15:26:16 by atote             #+#    #+#             */
-/*   Updated: 2020/11/08 21:26:15 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/09 09:49:31 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,12 @@ t_path	*bellman_ford(t_farm *farma)
 	t_path	*tpath;
 	t_path	*rpath;
 
-	d = (int *)malloc(sizeof(int) * farma->count_of_rooms);
-	p = (t_room **)malloc(sizeof(t_room*) * farma->count_of_rooms);
-	tpath = (t_path *)malloc(sizeof(t_path));
-	rpath = (t_path *)malloc(sizeof(t_path));
-	tpath->rooms = (t_room **)malloc(sizeof(t_room *) * farma->count_of_rooms);
-	rpath->rooms = (t_room **)malloc(sizeof(t_room *) * farma->count_of_rooms);
+	d = (int *)malloc(sizeof(int) * (farma->count_of_rooms + 5));
+	p = (t_room **)malloc(sizeof(t_room*) * (farma->count_of_rooms + 5));
+	tpath = (t_path *)malloc(sizeof(t_path) * 2);
+	rpath = (t_path *)malloc(sizeof(t_path) * 2);
+	tpath->rooms = (t_room **)malloc(sizeof(t_room *) * (farma->count_of_rooms + 5));
+	rpath->rooms = (t_room **)malloc(sizeof(t_room *) * (farma->count_of_rooms + 5));
 	d[farma->rooms[0]->index] = 0;
 	init_d_farma(farma, &d);
 	fill_vector_of_pathes(farma, &d, &p);

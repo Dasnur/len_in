@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 23:56:43 by atote             #+#    #+#             */
-/*   Updated: 2020/11/08 19:33:58 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/09 09:54:05 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,15 @@ t_path	*init_list_path(t_path *p, int f, t_farm *pf)
 {
 	if (f == 1)
 	{
-		p->rooms = (t_room**)malloc(sizeof(t_room*) * pf->count_of_rooms);
+		p->rooms = (t_room**)malloc(sizeof(t_room*) * (pf->count_of_rooms + 5));
 		p->rooms[0] = pf->rooms[0];
 		p->next = NULL;
 		return (p);
 	}
 	if (f == 2)
 	{
-		p->next = (t_path*)malloc(sizeof(*p));
-		p->next->rooms = (t_room**)malloc(sizeof(t_room*) * pf->count_of_rooms);
+		p->next = (t_path*)malloc(sizeof(*p) * 2);
+		p->next->rooms = (t_room**)malloc(sizeof(t_room*) * (pf->count_of_rooms + 5));
 		p->next->rooms[0] = pf->rooms[0];
 		p->next->next = NULL;
 		p = p->next;
@@ -106,7 +106,7 @@ t_path	*get_shortest_path(t_farm *pfarma, t_path *shpat)
 
 	flag = 0;
 	new_edges = (t_edge*)malloc((pfarma->count_of_links) * sizeof(*new_edges));
-	ppth = (t_path*)malloc(1 * sizeof(*ppth));
+	ppth = (t_path*)malloc(2 * sizeof(*ppth));
 	k_path = 0;
 	pfarma->ii = count_avail_pathes(pfarma, &new_edges, &k_path, &flag);
 	if (bad_case(pfarma, shpat, flag))

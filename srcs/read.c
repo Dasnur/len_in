@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 20:54:09 by atote             #+#    #+#             */
-/*   Updated: 2020/11/08 20:09:06 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/08 23:19:34 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,9 @@ void	read_farm_room(char *line, t_farm *farma, t_map *tmp)
 	farma->count_of_rooms++;
 }
 
-void	exec_no_links_nostart_end(t_farm *farma)
+void	exec_no_links_nostart_end(t_farm *farma, t_map *prev)
 {
+	prev->next = NULL;
 	if (farma->count_of_rooms < 2)
 		exec("Error: Input has no start or end room\n", 4, farma);
 	if (farma->count_of_links == 0)
@@ -78,8 +79,8 @@ void	read_farm(t_farm *farma)
 		tmp->next = (t_map*)malloc(sizeof(t_map));
 		prev = tmp;
 		tmp = tmp->next;
+		tmp->next = NULL;
 	}
 	free(prev->next);
-	prev->next = NULL;
-	exec_no_links_nostart_end(farma);
+	exec_no_links_nostart_end(farma, prev);
 }

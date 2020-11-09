@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 22:06:08 by atote             #+#    #+#             */
-/*   Updated: 2020/11/08 21:26:22 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/09 00:03:58 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	fill_start_end(t_farm *farma, t_map **tmp_map, size_t *k, int se)
 void	init_farma(t_farm *f)
 {
 	f->count_index_room = 0;
-	f->rooms = (t_room**)malloc(sizeof(t_room*) * (f->count_of_rooms + 1));
+	f->rooms = (t_room**)malloc(sizeof(t_room*) * (f->count_of_rooms + 5));
 	f->rooms[0] = NULL;
 	f->rooms[1] = NULL;
 	f->links = NULL;
