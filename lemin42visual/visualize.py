@@ -8,12 +8,13 @@ import sys
 
 base_room_fill_color = '#b5b8bd'
 base_edge_color = '#82868c'
-bg_color = '#110026'
+bg_color = '#07000d'
 start_room_color = '#2bffce'
 finish_room_color = '#ffab03'
 room_size = 500
-speed = 10
+speed = 15
 ant_colors = ['#ff00dd', '#ff007b', '#ff0048', '#2400c4', '#8f63db', '#026e04']
+figure_size = (10, 8) # inches
 
 
 def create_rooms_edges(farm_map):
@@ -94,7 +95,7 @@ if __name__ == '__main__':
     nx_graph = create_nx_graph(rooms, edges)
     ants_colors_dict = create_ants_colors(ant_paths, ant_colors)
     movements, frames_number = create_movements(ant_paths)
-    fig = plt.figure(figsize=(15, 7))
+    fig = plt.figure(figsize=figure_size)
     ani = FuncAnimation(fig,
                         update,
                         frames=frames_number,

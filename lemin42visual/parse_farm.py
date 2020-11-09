@@ -1,17 +1,4 @@
 from dataclasses import dataclass
-from tkinter import Tk, Frame, Canvas, BOTH, YES
-
-BACKGROUND_COLOR = '#16003d'
-ROOM_COLOR = 'white'
-START_ROOM_COLOR = 'green'
-FINISH_ROOM_COLOR = 'blue'
-BOUND_ROOM_WIDTH = 3
-ROOM_SIZE = 15
-SCALE_VALUE = 50
-FIELD_WIDTH = 900
-FIELD_HEIGHT = 500
-INDENT_SIZE = 50
-
 
 @dataclass
 class Room:
