@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 10:32:59 by atote             #+#    #+#             */
-/*   Updated: 2020/11/08 23:37:01 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/10 14:18:24 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	fill_l(t_farm *farma, t_map *tmp_map)
 
 	i = 0;
 	if (farma->rooms[0] == NULL || farma->rooms[1] == NULL)
-		exec("ERROR: Input has no start or end room\n", 2, farma);
+		exec("ERROR: Input has no start or end room\n", 21, farma);
 	farma->links = (t_link**)malloc(sizeof(t_link*) * farma->count_of_links);
 	while (i < farma->count_of_links)
 	{
@@ -100,8 +100,8 @@ void	fill_rooms(t_farm *farma)
 	i = 2;
 	k = 0;
 	tmp_map = farma->mapa;
-	tmp_map = tmp_map->next;
 	init_farma(farma);
+	tmp_map = tmp_map->next;
 	while (k < farma->count_of_rooms)
 	{
 		if (ft_strcmp(tmp_map->line, "##start") == 0)

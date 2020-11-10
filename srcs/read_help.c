@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 21:19:53 by atote             #+#    #+#             */
-/*   Updated: 2020/11/08 23:11:37 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/10 14:13:30 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,16 @@ void	exec1(const char *line, size_t code, t_farm *farma, char *line1)
 	clear_mapa(farma);
 	ft_printf("%s", line);
 	exit(code);
+}
+
+void	exec_no_links_nostart_end(t_farm *farma, t_map *prev)
+{
+	if (farma->count_of_rooms == 0 && farma->count_of_links == 0)
+		exec1("ERROR: invalid line\n", 2, farma, NULL);
+	free(prev->next);
+	prev->next = NULL;
+	if (farma->count_of_rooms < 2)
+		exec("Error: Input has no start or end room\n", 4, farma);
+	if (farma->count_of_links == 0)
+		exec("ERROR: No links\n", 9, farma);
 }

@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 23:56:43 by atote             #+#    #+#             */
-/*   Updated: 2020/11/09 10:20:12 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/10 14:17:38 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ t_path	*get_shortest_path(t_farm *pfarma, t_path *shpat)
 		return (NULL);
 	}
 	ppth = gsp_help(ppth, pfarma, k_path, new_edges);
+	del_no_end(ppth, pfarma);
 	free(new_edges);
 	return (ppth);
 }

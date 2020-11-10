@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 20:54:09 by atote             #+#    #+#             */
-/*   Updated: 2020/11/09 14:09:24 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/10 14:23:50 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,26 @@ size_t	str_count_chr(const char *line, char a)
 void	read_farm_room(char *line, t_farm *farma, t_map *tmp)
 {
 	if (check_duplicate_name(line, farma->mapa, tmp))
-		exec("ERROR: Input has room name duplicate\n", 3, farma);
+		exec1("ERROR: Input has room name duplicate\n", 3, farma, line);
 	if (check_coordinates(line))
-		exec("ERROR: letter_in_coordinates\n", 5, farma);
+		exec1("ERROR: letter_in_coordinates\n", 5, farma, line);
 	farma->count_of_rooms++;
 }
 
-void	exec_no_links_nostart_end(t_farm *farma, t_map *prev)
+void	read_count(t_farm *farma, char *line, t_map *tmp, size_t *flag)
 {
-	if (farma->count_of_rooms == 0 && farma->count_of_links == 0)
-        exec1("ERROR: invalid line\n", 2, farma, NULL);
-	free(prev->next);
-	prev->next = NULL;
-	if (farma->count_of_rooms < 2)
-		exec("Error: Input has no start or end room\n", 4, farma);
-	if (farma->count_of_links == 0)
-		exec("ERROR: No links\n", 9, farma);
+	while (line[0] == '#' && *flag)
+	{
+		free(line);
+		get_next_line(0, &line);
+	}
+	*flag = 0;
+	if (str_count_chr(line, ' ') == 2 && line[0] != '#')
+		read_farm_room(line, farma, tmp);
+	else if (str_count_chr(line, '-') == 1 && line[0] != '#')
+		farma->count_of_links++;
+	else if (str_count_chr(line, '#') == 0 && tmp != farma->mapa)
+		exec1("ERROR: invalid line\n", 2, farma, line);
 }
 
 void	read_farm(t_farm *farma)
@@ -64,19 +68,16 @@ void	read_farm(t_farm *farma)
 	char	*line;
 	t_map	*tmp;
 	t_map	*prev;
+	size_t	flag;
 
 	farma->mapa = (t_map*)malloc(sizeof(t_map));
 	tmp = farma->mapa;
+	flag = 1;
 	farma->count_of_links = 0;
 	farma->count_of_rooms = 0;
 	while (get_next_line(0, &line) > 0)
 	{
-		if (str_count_chr(line, ' ') == 2)
-			read_farm_room(line, farma, tmp);
-		else if (str_count_chr(line, '-') == 1)
-			farma->count_of_links++;
-		else if (str_count_chr(line, '#') == 0 && tmp != farma->mapa)
-			exec1("ERROR: invalid line\n", 2, farma, line);
+		read_count(farma, line, tmp, &flag);
 		tmp->line = ft_strdup(line);
 		free(line);
 		tmp->next = (t_map*)malloc(sizeof(t_map));

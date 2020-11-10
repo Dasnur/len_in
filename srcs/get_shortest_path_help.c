@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/08 01:15:13 by atote             #+#    #+#             */
-/*   Updated: 2020/11/08 18:40:03 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/10 14:17:45 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,26 @@ size_t	count_avail_pathes(t_farm *pf, t_edge **ne, size_t *k_path, int *flag)
 		(pf->k)++;
 	}
 	return (i);
+}
+
+void	del_no_end(t_path *ppth, t_farm *pfarma)
+{
+	size_t	i;
+	t_path	*tmp;
+	t_path	*prev;
+
+	tmp = ppth->next;
+	prev = ppth;
+	i = 0;
+	while (tmp)
+	{
+		i = 0;
+		while (tmp->rooms[i] != NULL)
+			i++;
+		if (ft_strcmp(tmp->rooms[i - 1]->name, pfarma->rooms[1]->name) != 0)
+			prev->next = tmp->next;
+		else
+			prev = prev->next;
+		tmp = tmp->next;
+	}
 }

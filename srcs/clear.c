@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/08 13:20:50 by atote             #+#    #+#             */
-/*   Updated: 2020/11/08 18:41:51 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/10 14:19:55 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,10 @@ void	clear_rooms(t_farm *farma)
 	it = 0;
 	if (farma->rooms)
 	{
-		while ((it < farma->count_of_rooms) && farma->rooms[it])
+		while (((it < farma->count_of_rooms + 2) && farma->rooms[it]) || it < 2)
 		{
-			free(farma->rooms[it]->name);
+			if (farma->rooms[it])
+				free(farma->rooms[it]->name);
 			free(farma->rooms[it]);
 			it++;
 		}

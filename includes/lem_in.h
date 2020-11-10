@@ -6,7 +6,7 @@
 /*   By: atote <atote@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/31 09:47:39 by atote             #+#    #+#             */
-/*   Updated: 2020/11/08 21:26:32 by atote            ###   ########.fr       */
+/*   Updated: 2020/11/10 14:17:55 by atote            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,7 @@ void				bf_clear(t_room **p, int *d, t_path *tt_path);
 void				exec1(const char *line, size_t code, t_farm *farma,
 char *line1);
 void				init_d_farma(t_farm *farma, int **d);
+void				exec_no_links_nostart_end(t_farm *farma, t_map *prev);
+void				del_no_end(t_path *ppth, t_farm *pfarma);
 
 #endif

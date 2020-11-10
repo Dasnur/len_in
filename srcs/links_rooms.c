@@ -25,8 +25,9 @@ size_t	find_index_of_room(const char *find, t_farm *farma)
 			return (i);
 		i++;
 	}
-	ft_printf("ERROR: Invalid link\n");
-	exit(6);
+	free(farma->edges);
+	exec("ERROR: Invalid link\n", 6, farma);
+	return (0);
 }
 
 size_t	find_index_of_linked(t_room **rooms)
